@@ -48,7 +48,7 @@
 
                 <!-- Pengadaan Pending -->
                 <?php if ($notif['pengadaan_pending'] > 0): ?>
-                <a class="dropdown-item" href="<?php echo url('penerimaan') ?>">
+                <a class="dropdown-item" href="<?php echo url('penerimaan/barang') ?>">
                     <i class="fas fa-file-invoice-dollar me-2 text-warning"></i>
                     Pengadaan menunggu diterima
                     (<?php echo $notif['pengadaan_pending'] ?>)
