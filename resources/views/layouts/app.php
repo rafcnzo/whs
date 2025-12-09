@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="<?php echo asset('favicon.ico')?>">
     <title><?php echo $title ?? 'Dashboard' ?> - Smart Whs</title>
     <link href="<?php echo asset('css/app.css') ?>" rel="stylesheet">
     <link href="<?php echo asset('css/bootstrap.min.css') ?>" rel="stylesheet">
