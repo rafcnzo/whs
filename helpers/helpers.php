@@ -1,25 +1,36 @@
 <?php
 // helpers/helpers.php
 
-if (!function_exists('asset')) {
+// 1. FIX ASSET: Mengarah ke root domain (karena public adalah root di Railway)
+if (! function_exists('asset')) {
     function asset($path)
     {
-        return '/' . ltrim($path, '/');   // TANPA /public/ lagi
+        // Menghasilkan /css/style.css
+        // Browser akan otomatis mencari di domain.com/css/style.css
+        return '/' . ltrim($path, '/');
     }
 }
 
-if (!function_exists('url')) {
-    function url($path = '') {
-        $base = rtrim('http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . 
-                 $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']), '/\\');
-        return $base . '/' . ltrim($path, '/');
+// 2. FIX URL: Otomatis mendeteksi HTTPS (Railway) atau HTTP (Local)
+if (! function_exists('url')) {
+    function url($path = '')
+    {
+        // Cek protokol (Railway pakai HTTPS, Local pakai HTTP)
+        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
+        || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+            ? "https" : "http";
+
+        $host = $_SERVER['HTTP_HOST']; // Ambil domain (contoh: xxx.up.railway.app atau localhost)
+
+        return $protocol . '://' . $host . '/' . ltrim($path, '/');
     }
 }
 
-if (!function_exists('view')) {
+if (! function_exists('view')) {
     function view(string $view, array $data = [], string $layout = null)
     {
-        $controller = new App\Http\Controllers\Controller();
+        // Pastikan namespace controller sesuai struktur folder kamu
+        $controller = new \App\Http\Controllers\Controller();
         if ($layout) {
             $controller->layout($layout);
         }
@@ -27,10 +38,10 @@ if (!function_exists('view')) {
     }
 }
 
-if (!function_exists('dd')) {
+if (! function_exists('dd')) {
     function dd(...$vars)
     {
-        echo '<pre style="background:#1a1a1a;color:#b3b3b3;padding:20px;border-radius:8px;">';
+        echo '<pre style="background:#1a1a1a;color:#b3b3b3;padding:20px;border-radius:8px;z-index:9999;position:relative;">';
         foreach ($vars as $var) {
             var_dump($var);
         }
@@ -39,31 +50,43 @@ if (!function_exists('dd')) {
     }
 }
 
-if (!function_exists('config')) {
+if (! function_exists('config')) {
     function config(string $key, $default = null)
     {
         $file = __DIR__ . '/../config/' . str_replace('.', '/', $key) . '.php';
         if (file_exists($file)) {
             return require $file;
         }
-        // atau pakai array config global nanti
         return $default;
     }
 }
 
+// 3. FIX DB: INI YANG PALING PENTING!
+// Harus pakai logika Hybrid (Cek env Railway dulu, baru Local)
 function db()
 {
     static $pdo = null;
 
     if ($pdo === null) {
-        $host = 'localhost';
-        $dbname = 'smartwarehouse';
-        $port = '3306';
-        $user = 'root';
-        $pass = '';
+        try {
+            // Ambil dari Environment Variables Railway
+            // Jika kosong (artinya di laptop), pakai settingan default (kanan)
+            $host   = getenv('DB_HOST') ? getenv('DB_HOST') : 'localhost';
+            $port   = getenv('DB_PORT') ? getenv('DB_PORT') : '3306';
+            $dbname = getenv('DB_DATABASE') ? getenv('DB_DATABASE') : 'smartwarehouse';
+            $user   = getenv('DB_USERNAME') ? getenv('DB_USERNAME') : 'root';
+            $pass   = getenv('DB_PASSWORD') ? getenv('DB_PASSWORD') : '';
 
-        $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8", $user, $pass);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+
+            $pdo = new PDO($dsn, $user, $pass);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // Tambahan: Agar data diambil sebagai array asosiatif (nama kolom)
+            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            die("Koneksi Helper Gagal: " . $e->getMessage());
+        }
     }
 
     return $pdo;
