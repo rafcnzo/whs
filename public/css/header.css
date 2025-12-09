@@ -1,0 +1,152 @@
+/* HEADER WRAPPER */
+.header {
+  height: 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e2e2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+  z-index: 1090;
+}
+
+/* LEFT SECTION SHIFT (saat sidebar terbuka) */
+#headerLeft {
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Saat sidebar collapse */
+.sidebar-collapsed #headerLeft {
+  margin-left: 270px;
+}
+
+/* DATETIME */
+.datetime {
+  font-size: 0.92rem;
+  color: #1e1e2e;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.datetime i {
+  color: #0d6efd;
+}
+
+/* ARROW BACK */
+.datetime a {
+  color: #1e1e2f;
+  transition: color 0.2s ease;
+}
+
+.datetime a:hover {
+  color: #0d6efd;
+}
+
+/* SEARCH (mobile optional) */
+.top-nav-search input {
+  width: 200px;
+  transition: width 0.3s ease;
+  border-radius: 8px;
+}
+
+.top-nav-search input:focus {
+  width: 280px;
+}
+
+/* USER MENU */
+.user-menu .nav-link {
+  color: #222;
+  font-weight: 500;
+  padding: 0 10px;
+  transition: color 0.25s ease;
+}
+
+.user-menu .nav-link:hover {
+  color: #0d6efd;
+}
+
+/* NOTIFICATION BADGE */
+.user-menu .badge {
+  font-size: 0.65rem;
+  padding: 3px 6px;
+}
+
+/* DROPDOWN */
+.user-menu .dropdown-menu {
+  min-width: 240px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  padding: 0;
+  overflow: hidden;
+  animation: fadeDown 0.15s ease;
+}
+
+.user-menu .dropdown-menu a {
+  padding: 10px 15px;
+  font-size: 0.95rem;
+  color: #333;
+  border-bottom: 1px solid #f2f2f2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.user-menu .dropdown-menu a:hover {
+  background: #f5f8ff;
+  color: #0d6efd;
+}
+
+.user-menu .dropdown-menu .dropdown-divider {
+  margin: 0;
+}
+
+.user-menu img {
+  border: 2px solid #ddd;
+  padding: 2px;
+  background: #fff;
+}
+
+/* Small animation */
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-link1 {
+    color: #424242 !important;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: .95rem;
+    transition: .2s;
+    position: relative;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.nav-link1 i {
+    width: 22px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.nav-link1:hover {
+    background: rgba(255, 255, 255, .12);
+    color: #141414 !important;
+}
+
+.translate-middle {
+    transform: translate(-140%, -115%) !important;
+}
